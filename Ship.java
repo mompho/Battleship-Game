@@ -1,4 +1,5 @@
 package battleshipGame;
+
 public class Ship
 {
     /*
