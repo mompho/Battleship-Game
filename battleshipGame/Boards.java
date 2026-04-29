@@ -337,7 +337,7 @@ public class Boards
         {
             for(int j = 0;j<boardA[0].length;j++)
             {
-                System.out.println(boardA[i][j]);
+                System.out.print(boardA[i][j] + "      ");
             }
             System.out.println();
         }
@@ -349,7 +349,7 @@ public class Boards
         {
             for(int j = 0;j<boardB[0].length;j++)
             {
-                System.out.println(boardB[i][j]);
+                System.out.print(boardB[i][j] + "      ");
             }
             System.out.println();
         }
