@@ -15,17 +15,17 @@ public class Coordinate
         xCor = x;
         yCor = y;
     }
-    public int getXCor()
+    public int getX()
     {
         return xCor;
     }
-    public int getYCor()
+    public int getY()
     {
         return yCor;
     }
     public String toString()
     {
-        return "("+getXCor()+ ", "+getYCor() + ")";
+        return "("+getX()+ ", "+getY() + ")";
     }
     public static void main(String args[])
     {

@@ -19,7 +19,7 @@ public class Battleship
 
             // Computer attacking player
             Coordinate attackOnPlayer = c.getPredictedCoord(p);
-            c.fireAndAttackPlayer(c, attackOnPlayer);
+            c.fireAndAttackPlayer(p, attackOnPlayer);
 
             // Print out Player's Boards
             System.out.println("Your Board A: ");
@@ -28,17 +28,10 @@ public class Battleship
             System.out.println("Your Board B: ");
             p.printBoard(p.getBoardB());
         }
-        if(verifyPlayerWin(c))
-                {
-                    System.out.println("GAME OVER! CONGRATS YOU WON!");
-                } else if(verifyCompW(p))
-                {
-                    System.out.println("GAME OVER! YOU LOST, BETTER LUCK NEXT TIME!");
-                }
-            }
-        
-            private static boolean verifyPlayerWin(Computer c) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'verifyPlayerWin'");
-            }
+        if (p.verifyPlayerWin(c))
+            System.out.println("GAME OVER! CONGRATS YOU WON!");
+        else if (c.verifyCompW(p))
+            System.out.println("GAME OVER! YOU LOST, BETTER LUCK NEXT TIME!");
+    }
+    
 }

@@ -1,4 +1,5 @@
 package battleshipGame;
+
 import java.util.ArrayList;
 
 public class Computer
@@ -86,7 +87,7 @@ public class Computer
         }
     }
 
-    public Coordinate getPredictionCoord(Player p)
+    public Coordinate getPredictedCoord(Player p)
     {
         Coordinate c = randomCoordinate();
 
@@ -100,10 +101,10 @@ public class Computer
                 int randNum = (int)(Math.random() * chooseFrom.size()) + 1;
                 while(!bds.isValidAttack(chooseFrom.get(randNum-1)) || bds.getBoardB()[chooseFrom.get(randNum -1).getY() +1][chooseFrom.get(randNum -1).getX() +1] != '~')
                 {
-                    random = (int)(Math.random() * chooseFrom.size()) +1;
+                    randNum = (int)(Math.random() * chooseFrom.size()) +1;
                 }
 
-                coord.add(chooseFrom.get(randNum -1));
+                coords.add(chooseFrom.get(randNum -1));
                 return chooseFrom.get(randNum -1);
             }
         }
@@ -163,15 +164,16 @@ public class Computer
             adjacentCoords.add(new Coordinate(crd.getX() -1, crd.getY()));
             adjacentCoords.add(new Coordinate(crd.getX() +1, crd.getY()));
         }
+        return adjacentCoords;
     }
 
     public boolean verifyCompW(Player p)
     {
         for(int i = 1; i < p.getBoardA().length; i++)
         {
-            for(intj = 0; j < p.getBoardA()[0].length; j++)
+            for(int j = 0; j < p.getBoardA()[0].length; j++)
             {
-                if(p.getBoardA()[i][j] != "~" && bds.getBoardB()[i][j] != 'H' )
+                if(p.getBoardA()[i][j] != '~' && bds.getBoardB()[i][j] != 'H' )
                 {
                     return false;
                 }

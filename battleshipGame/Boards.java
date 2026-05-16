@@ -17,7 +17,7 @@ public class Boards
     private int numDestroyerComp = 0;
     private int numPatrolBoatComp = 0;
 
-    public Board()
+    public Boards()
     {
         initBoardA();
         initBoardB();
@@ -42,13 +42,12 @@ public class Boards
             num++;
         }
     // rest of board
-        for(int i = 1; i < boardA.length; i++)
+        for (int i = 1; i < boardA.length; i++)
         {
-            for(int j = 1; i < boardA[0].length; j++)
+            for (int j = 1; j < boardA[0].length; j++)
             {
                 boardA[i][j] = '~';
             }
-
         }
     }
 
@@ -70,13 +69,12 @@ public class Boards
             num++;
         }
     // rest of board
-        for(int i = 1; i < boardB.length; i++)
+        for (int i = 1; i < boardB.length; i++)
         {
-            for(int j = 1; i < boardB[0].length; j++)
+            for (int j = 1; j < boardB[0].length; j++)
             {
                 boardB[i][j] = '~';
             }
-
         }
     }
 
@@ -211,7 +209,7 @@ public class Boards
             }
         }
 // Check hit or miss
-        if(opposition.getBoardA()[yCoordinate][xCoordinate] != "~")
+        if(opposition.getBoardA()[yCoordinate][xCoordinate] != '~')
         {
             this.getBoardB()[yCoordinate][xCoordinate] = 'H';
             opposition.getBoardA()[yCoordinate][xCoordinate] = 'X';
@@ -264,7 +262,7 @@ public class Boards
             }
         }
 // Check hit or miss
-        if(opposition.getBoardA()[yCoordinate][xCoordinate] != "~")
+        if(opposition.getBoardA()[yCoordinate][xCoordinate] != '~')
         {
             this.getBoardA()[yCoordinate][xCoordinate] = 'X';
             opposition.getBoardB()[yCoordinate][xCoordinate] = 'H';
@@ -291,9 +289,9 @@ public class Boards
         int yCoordinate = crd.getY() +1;
         int xCoordinate = crd.getX() +1;
 
-        boardA()[yCoordinate][xCoordinate] = s.getLetter();
+        boardA[yCoordinate][xCoordinate] = s.getLetter();
 
-        if(s.getDirection == 'u')
+        if(s.getDirection() == 'u')
         {
             for(int i = yCoordinate; i > yCoordinate - s.getSize(); i--)
             {

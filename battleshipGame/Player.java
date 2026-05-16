@@ -1,10 +1,11 @@
 package battleshipGame;
+
 import java.util.Scanner;
 
 public class Player 
 {
-    Board bds = new Boards();
-    Scanner scn = new Scanner(Systen.in);
+    Boards bds = new Boards();
+    Scanner scn = new Scanner(System.in);
 
     public Player()
     {
@@ -22,9 +23,9 @@ public class Player
         char dir = scn.next().charAt(0);
 
         System.out.println("Now enter the X-Coordinate of where the location is: ");
-        in xCord = scn.nextInt();
+        int xCord = scn.nextInt();
         System.out.println("Now enter the Y-Coordinate of where the location is: ");
-        in yCord = scn.nextInt();
+        int yCord = scn.nextInt();
 
         Coordinate crd = new Coordinate(xCord, yCord);
 
@@ -201,6 +202,7 @@ public class Player
                 }
             } 
         }
+        return true;
     }
 
     public char[][] getBoardA()
