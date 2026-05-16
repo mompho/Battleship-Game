@@ -2,354 +2,173 @@ package battleshipGame;
 
 public class Boards
 {
-    private char [][] boardA = new char[11][11];
-    private char [][] boardB = new char[11][11];
+    private char[][] boardA = new char[10][10];
+    private char[][] boardB = new char[10][10];
 
-    private int numAirCraftPlay = 0;
+    private int numAirCraftPlay   = 0;
     private int numBattleshipPlay = 0;
-    private int numSubmarinePlay = 0;
-    private int numDestroyerPlay = 0;
+    private int numSubmarinePlay  = 0;
+    private int numDestroyerPlay  = 0;
     private int numPatrolBoatPlay = 0;
 
-    private int numAirCraftComp = 0;
+    private int numAirCraftComp   = 0;
     private int numBattleshipComp = 0;
-    private int numSubmarineComp = 0;
-    private int numDestroyerComp = 0;
+    private int numSubmarineComp  = 0;
+    private int numDestroyerComp  = 0;
     private int numPatrolBoatComp = 0;
 
     public Boards()
     {
         initBoardA();
         initBoardB();
-
     }
 
     public void initBoardA()
     {
-        boardA[0][0] =' ';
-        int num = 1;
-    //first column
-        for(int i = 48; i <= 57; i++)
-        {
-            boardA[num][0] = (char) i;
-            num++;
-        }
-    //first row 
-        num = 1;
-        for(char i = 48; i <= 57; i++)
-        {
-            boardA[0][num] = i;
-            num++;
-        }
-    // rest of board
-        for (int i = 1; i < boardA.length; i++)
-        {
-            for (int j = 1; j < boardA[0].length; j++)
-            {
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
                 boardA[i][j] = '~';
-            }
-        }
     }
 
     public void initBoardB()
     {
-        boardB[0][0] =' ';
-        int num = 1;
-    //first column
-        for(int i =48; i <= 57; i++)
-        {
-            boardB[num][0] = (char) i;
-            num++;
-        }
-    //first row 
-        num = 1;
-        for(char i = 48; i <= 57; i++)
-        {
-            boardB[0][num] = i;
-            num++;
-        }
-    // rest of board
-        for (int i = 1; i < boardB.length; i++)
-        {
-            for (int j = 1; j < boardB[0].length; j++)
-            {
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
                 boardB[i][j] = '~';
-            }
-        }
     }
 
     public boolean isValidLocation(Coordinate crd, Ship s)
     {
-        int xCoordinate = crd.getX() + 1;
-        int yCoordinate = crd.getY() + 1;
+        int x = crd.getX(); // column
+        int y = crd.getY(); // row
 
-        if (xCoordinate < 1 || xCoordinate >= boardA[0].length)
-        {
-            return false;
-        }
-        if (yCoordinate < 1 || yCoordinate >= boardA.length)
-        {
-            return false;
-        }
+        if (x < 0 || x >= 10) return false;
+        if (y < 0 || y >= 10) return false;
 
-// Checking all cases of all the directions
         if (s.getDirection() == 'u')
         {
-            if (yCoordinate - (s.getSize() +1) < 1)
-            {
-                return false;
-            }
-            for(int i = yCoordinate; i > yCoordinate - s.getSize(); i--)
-            {
-                if(boardA[i][xCoordinate] != '~')
-                {
-                    return false;
-                }
-            }
-        }else if (s.getDirection() == 'd')
+            if (y - (s.getSize() - 1) < 0) return false;
+            for (int i = y; i > y - s.getSize(); i--)
+                if (boardA[i][x] != '~') return false;
+        }
+        else if (s.getDirection() == 'd')
         {
-            if (yCoordinate + (s.getSize() +1) >= boardA.length)
-            {
-                return false;
-            }
-            for(int i = yCoordinate; i <= yCoordinate + (s.getSize() -1); i++)
-            {
-                if(boardA[i][xCoordinate] != '~')
-                {
-                    return false;
-                }
-            }
+            if (y + (s.getSize() - 1) >= 10) return false;
+            for (int i = y; i < y + s.getSize(); i++)
+                if (boardA[i][x] != '~') return false;
         }
         else if (s.getDirection() == 'r')
         {
-            if (xCoordinate + (s.getSize() - 1) >= boardA[0].length)
-            {
-                return false;
-            }
-            for(int i = xCoordinate; i <= xCoordinate + (s.getSize() - 1); i++)
-            {
-                if(boardA[yCoordinate][i] != '~')
-                {
-                    return false;
-                }
-            }
+            if (x + (s.getSize() - 1) >= 10) return false;
+            for (int i = x; i < x + s.getSize(); i++)
+                if (boardA[y][i] != '~') return false;
         }
         else if (s.getDirection() == 'l')
         {
-            if (xCoordinate - (s.getSize() +1) < 1)
-                {
-                    return false;
-                }
-                for(int i = xCoordinate; i > xCoordinate - s.getSize(); i--)
-                {
-                    if(boardA[yCoordinate][i] != '~')
-                    {
-                        return false;
-                    }
-                }
+            if (x - (s.getSize() - 1) < 0) return false;
+            for (int i = x; i > x - s.getSize(); i--)
+                if (boardA[y][i] != '~') return false;
         }
         return true;
     }
 
     public boolean isValidAttack(Coordinate crd)
     {
-        int yCoordinate = crd.getY() +1;
-        int xCoordinate = crd.getX() +1;
-
-        if(xCoordinate < 1 || xCoordinate >= boardA[0].length)
-        {
-            return false;
-        }
-        if(yCoordinate < 1 || yCoordinate >= boardA.length)
-        {
-            return false;
-        }
-        return true;
+        int x = crd.getX();
+        int y = crd.getY();
+        return (x >= 0 && x < 10 && y >= 0 && y < 10);
     }
 
     public char resultHitMissComp(Coordinate crd, Computer opposition)
     {
-        int yCoordinate = crd.getY() +1;
-        int xCoordinate = crd.getX() +1;
+        int y = crd.getY();
+        int x = crd.getX();
+        char cell = opposition.getBoardA()[y][x];
 
-        if(opposition.getBoardA()[yCoordinate][xCoordinate]=='A')
+        if      (cell == 'A') { numAirCraftComp++;   if (numAirCraftComp   == 5) System.out.println("You have sunk your opponent's aircraft carrier!"); }
+        else if (cell == 'B') { numBattleshipComp++; if (numBattleshipComp == 4) System.out.println("You have sunk your opponent's battleship!"); }
+        else if (cell == 'S') { numSubmarineComp++;  if (numSubmarineComp  == 3) System.out.println("You have sunk your opponent's submarine!"); }
+        else if (cell == 'D') { numDestroyerComp++;  if (numDestroyerComp  == 3) System.out.println("You have sunk your opponent's destroyer!"); }
+        else if (cell == 'P') { numPatrolBoatComp++; if (numPatrolBoatComp == 2) System.out.println("You have sunk your opponent's patrol boat!"); }
+
+        if (cell != '~')
         {
-            numAirCraftComp++;
-            if(numAirCraftComp == 5)
-            {
-                System.out.println("You have sunk your opponent's aircraft carrier!");  
-            }
-        }else if (opposition.getBoardA()[yCoordinate][xCoordinate]=='B')
-        {
-            numBattleshipComp++;
-            if(numBattleshipComp == 4)
-            {
-                System.out.println("You have sunk your opponent's battleship!");  
-            }
-        }else if (opposition.getBoardA()[yCoordinate][xCoordinate]=='S')
-        {
-            numSubmarineComp++;
-            if(numSubmarineComp == 3)
-            {
-                System.out.println("You have sunk your opponent's submarine!");  
-            }
-        }else if (opposition.getBoardA()[yCoordinate][xCoordinate]=='D')
-        {
-            numDestroyerComp++;
-            if(numDestroyerComp == 3)
-            {
-                System.out.println("You have sunk your opponent's destroyer!");  
-            }
-        }else if (opposition.getBoardA()[yCoordinate][xCoordinate]=='P')
-        {
-            numPatrolBoatComp++;
-            if(numPatrolBoatComp == 2)
-            {
-                System.out.println("You have sunk your opponent's patrol boat!");  
-            }
-        }
-// Check hit or miss
-        if(opposition.getBoardA()[yCoordinate][xCoordinate] != '~')
-        {
-            this.getBoardB()[yCoordinate][xCoordinate] = 'H';
-            opposition.getBoardA()[yCoordinate][xCoordinate] = 'X';
+            boardB[y][x] = 'H';
+            opposition.getBoardA()[y][x] = 'X';
             return 'H';
         }
-        this.getBoardB()[yCoordinate][xCoordinate] ='M';
+        boardB[y][x] = 'M';
         return 'M';
-
     }
-    
+
     public char resultHitMissPlayer(Coordinate crd, Player opposition)
     {
-        int yCoordinate = crd.getY() +1;
-        int xCoordinate = crd.getX() +1;
+        int y = crd.getY();
+        int x = crd.getX();
+        char cell = opposition.getBoardA()[y][x];
 
-        if(opposition.getBoardA()[yCoordinate][xCoordinate]=='A')
+        if      (cell == 'A') { numAirCraftPlay++;   if (numAirCraftPlay   == 5) System.out.println("Your opponent sunk your aircraft carrier!"); }
+        else if (cell == 'B') { numBattleshipPlay++; if (numBattleshipPlay == 4) System.out.println("Your opponent sunk your battleship!"); }
+        else if (cell == 'S') { numSubmarinePlay++;  if (numSubmarinePlay  == 3) System.out.println("Your opponent sunk your submarine!"); }
+        else if (cell == 'D') { numDestroyerPlay++;  if (numDestroyerPlay  == 3) System.out.println("Your opponent sunk your destroyer!"); }
+        else if (cell == 'P') { numPatrolBoatPlay++; if (numPatrolBoatPlay == 2) System.out.println("Your opponent sunk your patrol boat!"); }
+
+        if (cell != '~')
         {
-            numAirCraftPlay++;
-            if(numAirCraftPlay == 5)
-            {
-                System.out.println("Your opponent sunk your aircraft carrier!");  
-            }
-        }else if (opposition.getBoardA()[yCoordinate][xCoordinate]=='B')
-        {
-            numBattleshipPlay++;
-            if(numBattleshipPlay == 4)
-            {
-                System.out.println("Your opponent sunk your battleship!");  
-            }
-        }else if (opposition.getBoardA()[yCoordinate][xCoordinate]=='S')
-        {
-            numSubmarinePlay++;
-            if(numSubmarinePlay == 3)
-            {
-                System.out.println("Your opponent sunk your submarine!");  
-            }
-        }else if (opposition.getBoardA()[yCoordinate][xCoordinate]=='D')
-        {
-            numDestroyerPlay++;
-            if(numDestroyerPlay == 3)
-            {
-                System.out.println("Your opponent sunk your destroyer!");  
-            }
-        }else if (opposition.getBoardA()[yCoordinate][xCoordinate]=='P')
-        {
-            numPatrolBoatPlay++;
-            if(numPatrolBoatPlay == 2)
-            {
-                System.out.println("Your opponent sunk your patrol boat!");  
-            }
-        }
-// Check hit or miss
-        if(opposition.getBoardA()[yCoordinate][xCoordinate] != '~')
-        {
-            this.getBoardA()[yCoordinate][xCoordinate] = 'X';
-            opposition.getBoardB()[yCoordinate][xCoordinate] = 'H';
+            opposition.getBoardA()[y][x] = 'X';
             return 'H';
         }
-        this.getBoardB()[yCoordinate][xCoordinate] ='M';
+        boardB[y][x] = 'M';
         return 'M';
-
     }
 
     public void printResult(char result)
     {
-        if(result == 'M')
-        {
+        if (result == 'M')
             System.out.println("Tough luck soldier! You MISSED!");
-        }else
-        {
+        else
             System.out.println("Great strike soldier! You successfully HIT the enemy ship!");
-        }
     }
 
     public void placeShips(Coordinate crd, Ship s)
     {
-        int yCoordinate = crd.getY() +1;
-        int xCoordinate = crd.getX() +1;
+        int x = crd.getX();
+        int y = crd.getY();
 
-        boardA[yCoordinate][xCoordinate] = s.getLetter();
-
-        if(s.getDirection() == 'u')
-        {
-            for(int i = yCoordinate; i > yCoordinate - s.getSize(); i--)
-            {
-                boardA[i][xCoordinate] = s.getLetter();
-            }
-
-        }else if (s.getDirection() == 'd')
-        {
-            for(int i = yCoordinate; i <= yCoordinate + (s.getSize() -1); i++)
-            {
-                boardA[i][xCoordinate] = s.getLetter();
-            }
-        }else if (s.getDirection() == 'r')
-        {
-            for(int i = xCoordinate; i <= xCoordinate + (s.getSize() - 1); i++)
-            {
-                boardA[yCoordinate][i] = s.getLetter();
-            }
-        }else if (s.getDirection() == 'l')
-        {
-            for(int i = xCoordinate; i > xCoordinate - s.getSize(); i--)
-            {
-                boardA[yCoordinate][i] = s.getLetter();
-            }
-        }
+        if (s.getDirection() == 'u')
+            for (int i = y; i > y - s.getSize(); i--)
+                boardA[i][x] = s.getLetter();
+        else if (s.getDirection() == 'd')
+            for (int i = y; i < y + s.getSize(); i++)
+                boardA[i][x] = s.getLetter();
+        else if (s.getDirection() == 'r')
+            for (int i = x; i < x + s.getSize(); i++)
+                boardA[y][i] = s.getLetter();
+        else if (s.getDirection() == 'l')
+            for (int i = x; i > x - s.getSize(); i--)
+                boardA[y][i] = s.getLetter();
     }
 
-    public char[][] getBoardA()
-    {
-        return boardA;
-    }
+    public char[][] getBoardA() { return boardA; }
+    public char[][] getBoardB() { return boardB; }
 
-    public char[][] getBoardB()
+    // Prints board with column header row (0-9) and row number on each line
+    public void printBoard(char[][] board)
     {
-        return boardB;
-    }
+        System.out.print("        ");
+        for (int j = 0; j < 10; j++)
+            System.out.printf("%-8d", j);
+        System.out.println();
 
-    public void printBoardA()
-    {
-        for(int i = 0; i< boardA.length;i++)
+        for (int i = 0; i < 10; i++)
         {
-            for(int j = 0;j<boardA[0].length;j++)
-            {
-                System.out.print(boardA[i][j] + "      ");
-            }
+            System.out.printf("%-8d", i);
+            for (int j = 0; j < 10; j++)
+                System.out.printf("%-8c", board[i][j]);
             System.out.println();
         }
     }
 
-    public void printBoardB()
-    {
-        for(int i = 0; i< boardB.length;i++)
-        {
-            for(int j = 0;j<boardB[0].length;j++)
-            {
-                System.out.print(boardB[i][j] + "      ");
-            }
-            System.out.println();
-        }
-    }
+    public void printBoardA() { printBoard(boardA); }
+    public void printBoardB() { printBoard(boardB); }
 }

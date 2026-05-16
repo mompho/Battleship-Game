@@ -7,28 +7,21 @@ public class Coordinate
 
     public Coordinate()
     {
-        xCor = 1;
-        yCor = 1;
+        xCor = 0;
+        yCor = 0;
     }
+
     public Coordinate(int x, int y)
     {
         xCor = x;
         yCor = y;
     }
-    public int getX()
-    {
-        return xCor;
-    }
-    public int getY()
-    {
-        return yCor;
-    }
+
+    public int getX() { return xCor; }
+    public int getY() { return yCor; }
+
     public String toString()
     {
-        return "("+getX()+ ", "+getY() + ")";
-    }
-    public static void main(String args[])
-    {
-
+        return "(" + getX() + ", " + getY() + ")";
     }
 }

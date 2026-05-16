@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class Computer
 {
     Boards bds = new Boards();
-    ArrayList<Coordinate> coords = new ArrayList<Coordinate>();
+    ArrayList<Coordinate> coords     = new ArrayList<Coordinate>();
     ArrayList<Coordinate> chooseFrom = new ArrayList<Coordinate>();
-    
+
     public Computer()
     {
         bds.initBoardA();
@@ -16,204 +16,115 @@ public class Computer
 
     public void compSetUp()
     {
-        char direction = randomDirection();
-        Coordinate crd = randomCoordinate();
-        Ship aircraftCarrier = new Ship('A', direction, crd);
-        while(bds.isValidLocation(crd, aircraftCarrier) == false)
-        {
-            crd = randomCoordinate();
-        }
-
-        bds.placeShips(crd, aircraftCarrier);
-
-        direction = randomDirection();
-        crd = randomCoordinate();
-        Ship battleship = new Ship('B', direction, crd);
-        while(bds.isValidLocation(crd, battleship) == false)
-        {
-            crd = randomCoordinate();
-        }
-
-        bds.placeShips(crd, battleship);
-
-        direction = randomDirection();
-        crd = randomCoordinate();
-        Ship submarine = new Ship('S', direction, crd);
-        while(bds.isValidLocation(crd, submarine) == false)
-        {
-            crd = randomCoordinate();
-        }
-
-        bds.placeShips(crd, submarine);
-
-        direction = randomDirection();
-        crd = randomCoordinate();
-        Ship destroyer = new Ship('D', direction, crd);
-        while(bds.isValidLocation(crd, destroyer) == false)
-        {
-            crd = randomCoordinate();
-        }
-
-        bds.placeShips(crd, destroyer);
-
-        direction = randomDirection();
-        crd = randomCoordinate();
-        Ship patrolBoat = new Ship('P', direction, crd);
-        while(bds.isValidLocation(crd, patrolBoat) == false)
-        {
-            crd = randomCoordinate();
-        }
-
-        bds.placeShips(crd, patrolBoat);
+        placeShipRandomly('A');
+        placeShipRandomly('B');
+        placeShipRandomly('S');
+        placeShipRandomly('D');
+        placeShipRandomly('P');
 
         System.out.println("The Computer has finished setting up its board as well. Time to play!");
         System.out.println("'X' represents where the computer has attacked your board.");
-
     }
 
-    public void fireAndAttackPlayer(Player p, Coordinate attack)
+    private void placeShipRandomly(char type)
     {
-        printResult(bds.resultHitMissPlayer(attack, p));
-    }
-
-    public void printResult(char result)
-    {
-        if(result == 'H')
+        char dir = randomDirection();
+        Coordinate crd = randomCoordinate();
+        Ship ship = new Ship(type, dir, crd);
+        while (!bds.isValidLocation(crd, ship))
         {
-            System.out.println("The computer has successfully HIT your ship!");           
-        }else 
-        {
-            System.out.println("The computer has MISSED your ship");
+            dir  = randomDirection();
+            crd  = randomCoordinate();
+            ship = new Ship(type, dir, crd);
         }
+        bds.placeShips(crd, ship);
     }
 
     public Coordinate getPredictedCoord(Player p)
     {
-        Coordinate c = randomCoordinate();
-
-    // Computer will first predict where player ships are based on coordinates
-        if(coords.size() >= 1)
+        // If we have a previous hit, try adjacent cells
+        if (!coords.isEmpty())
         {
-            c = coords.get(coords.size() -1); // Last element of array list
-            if(bds.resultHitMissPlayer(c, p) == 'H')
+            Coordinate last = coords.get(coords.size() - 1);
+            // Only pursue adjacency if last coord was a hit
+            if (p.getBoardA()[last.getY()][last.getX()] == 'X')
             {
-                chooseFrom = chooseAdjacentLocations(c);
-                int randNum = (int)(Math.random() * chooseFrom.size()) + 1;
-                while(!bds.isValidAttack(chooseFrom.get(randNum-1)) || bds.getBoardB()[chooseFrom.get(randNum -1).getY() +1][chooseFrom.get(randNum -1).getX() +1] != '~')
+                chooseFrom = chooseAdjacentLocations(last);
+                for (Coordinate adj : chooseFrom)
                 {
-                    randNum = (int)(Math.random() * chooseFrom.size()) +1;
+                    if (bds.isValidAttack(adj) &&
+                        bds.getBoardB()[adj.getY()][adj.getX()] == '~')
+                    {
+                        coords.add(adj);
+                        return adj;
+                    }
                 }
-
-                coords.add(chooseFrom.get(randNum -1));
-                return chooseFrom.get(randNum -1);
             }
         }
-        c = randomCoordinate();
-        while(!bds.isValidAttack(c) || bds.getBoardB()[c.getY() +1][c.getX() +1] != '~')
-        {
+
+        // Random attack on an un-attacked cell
+        Coordinate c = randomCoordinate();
+        while (!bds.isValidAttack(c) || bds.getBoardB()[c.getY()][c.getX()] != '~')
             c = randomCoordinate();
-        }
+
         coords.add(c);
         return c;
     }
 
     public ArrayList<Coordinate> chooseAdjacentLocations(Coordinate crd)
     {
-        ArrayList<Coordinate> adjacentCoords = new ArrayList<Coordinate>();
-        if(crd.getX() == 0 && crd.getY() == 0)
-        {
-            adjacentCoords.add(new Coordinate(crd.getX() +1, crd.getY()));
-            adjacentCoords.add(new Coordinate(crd.getX() , crd.getY() +1));
-        }else if(crd.getX() == 0 && crd.getY() == 9)
-        {
-            adjacentCoords.add(new Coordinate(crd.getX() +1, crd.getY()));
-            adjacentCoords.add(new Coordinate(crd.getX() , crd.getY() -1));
+        ArrayList<Coordinate> adj = new ArrayList<Coordinate>();
+        int x = crd.getX();
+        int y = crd.getY();
 
-        }else if(crd.getX() == 0)
-        {
-            adjacentCoords.add(new Coordinate(crd.getX() +1, crd.getY()));
-            adjacentCoords.add(new Coordinate(crd.getX() , crd.getY() +1));
-            adjacentCoords.add(new Coordinate(crd.getX() , crd.getY() -1));
-        }else if(crd.getX() == 9 && crd.getY() == 0)
-        {
-            adjacentCoords.add(new Coordinate(crd.getX() -1, crd.getY()));
-            adjacentCoords.add(new Coordinate(crd.getX() , crd.getY() +1));
-        }else if(crd.getX() == 9 && crd.getY() == 9)
-        {
-            adjacentCoords.add(new Coordinate(crd.getX() -1, crd.getY()));
-            adjacentCoords.add(new Coordinate(crd.getX() , crd.getY() -1));
-        }else if(crd.getX() == 9)
-        {
-            adjacentCoords.add(new Coordinate(crd.getX() - 1, crd.getY()));
-            adjacentCoords.add(new Coordinate(crd.getX() , crd.getY() +1));
-            adjacentCoords.add(new Coordinate(crd.getX() , crd.getY() -1));
-        }else if(crd.getY() == 0)
-        {
-            adjacentCoords.add(new Coordinate(crd.getX() -1, crd.getY()));
-            adjacentCoords.add(new Coordinate(crd.getX() +1, crd.getY()));
-            adjacentCoords.add(new Coordinate(crd.getX() , crd.getY() +1));
-        }else if(crd.getY() == 9)
-        {
-            adjacentCoords.add(new Coordinate(crd.getX() -1, crd.getY()));
-            adjacentCoords.add(new Coordinate(crd.getX() +1, crd.getY()));
-            adjacentCoords.add(new Coordinate(crd.getX() , crd.getY() -1));
-        }else 
-        {
-            adjacentCoords.add(new Coordinate(crd.getX(), crd.getY() -1));
-            adjacentCoords.add(new Coordinate(crd.getX(), crd.getY() +1));
-            adjacentCoords.add(new Coordinate(crd.getX() -1, crd.getY()));
-            adjacentCoords.add(new Coordinate(crd.getX() +1, crd.getY()));
-        }
-        return adjacentCoords;
+        if (y > 0) adj.add(new Coordinate(x, y - 1)); // up
+        if (y < 9) adj.add(new Coordinate(x, y + 1)); // down
+        if (x > 0) adj.add(new Coordinate(x - 1, y)); // left
+        if (x < 9) adj.add(new Coordinate(x + 1, y)); // right
+
+        return adj;
     }
 
     public boolean verifyCompW(Player p)
     {
-        for(int i = 1; i < p.getBoardA().length; i++)
-        {
-            for(int j = 0; j < p.getBoardA()[0].length; j++)
-            {
-                if(p.getBoardA()[i][j] != '~' && bds.getBoardB()[i][j] != 'H' )
-                {
+        // Computer wins when every non-~ cell on player's boardA has been hit (marked X)
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                if (p.getBoardA()[i][j] != '~' && p.getBoardA()[i][j] != 'X')
                     return false;
-                }
-            }
-        }
         return true;
+    }
+
+    public void fireAndAttackPlayer(Player p, Coordinate attack)
+    {
+        char result = bds.resultHitMissPlayer(attack, p);
+        printResult(result);
+    }
+
+    public void printResult(char result)
+    {
+        if (result == 'H')
+            System.out.println("The computer has successfully HIT your ship!");
+        else
+            System.out.println("The computer MISSED your ship.");
     }
 
     public char randomDirection()
     {
-        int dirNum = (int)(Math.random() * 4) +1;
-        if(dirNum == 1)
-        {
-            return 'u';
-        }else if (dirNum == 2)
-        {
-            return 'd';
-        }else if (dirNum == 3)
-        {
-            return 'r';
-        }
-
+        int d = (int)(Math.random() * 4);
+        if (d == 0) return 'u';
+        if (d == 1) return 'd';
+        if (d == 2) return 'r';
         return 'l';
     }
 
     public Coordinate randomCoordinate()
     {
-        int randNum1 = (int)(Math.random() * 10);
-        int randNum2 = (int)(Math.random() * 10);
-
-        return new Coordinate(randNum1, randNum2);
+        int x = (int)(Math.random() * 10);
+        int y = (int)(Math.random() * 10);
+        return new Coordinate(x, y);
     }
 
-    public char[][] getBoardA()
-    {
-        return bds.getBoardA();
-    }
-
-    public char[][] getBoardB()
-    {
-        return bds.getBoardB();
-    }
+    public char[][] getBoardA() { return bds.getBoardA(); }
+    public char[][] getBoardB() { return bds.getBoardB(); }
 }
