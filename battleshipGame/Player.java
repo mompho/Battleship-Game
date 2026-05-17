@@ -1,5 +1,6 @@
 package battleshipGame;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Player
@@ -13,156 +14,145 @@ public class Player
         bds.initBoardB();
     }
 
-    public void PlayerSetUp()
+    // ---------------------------------------------------------------
+    // Helper: read a valid direction character ('u','d','r','l')
+    // Re-prompts on anything invalid
+    // ---------------------------------------------------------------
+    private char readDirection()
     {
-        System.out.println("Now it is time to set your ships!");
-
-        // --- Aircraft Carrier (size 5) ---
-        System.out.println("The first ship is an aircraft carrier of size 5");
-        System.out.println("What direction would you like to place this ship? Enter 'u' for up, 'd' for down, 'r' for right or 'l' for left");
-        char dir = scn.next().charAt(0);
-        System.out.println("Now enter the X-coordinate (column 0-9) of where the location is: ");
-        int xCord = scn.nextInt();
-        System.out.println("Now enter the Y-coordinate (row 0-9) of where the location is: ");
-        int yCord = scn.nextInt();
-
-        Coordinate crd = new Coordinate(xCord, yCord);
-        Ship aircraftCarrier = new Ship('A', dir, crd);
-        while (!bds.isValidLocation(crd, aircraftCarrier))
+        while (true)
         {
-            System.out.println("That is an invalid location. Please enter again.");
-            System.out.println("Enter the X-coordinate: ");
-            xCord = scn.nextInt();
-            System.out.println("Enter the Y-coordinate: ");
-            yCord = scn.nextInt();
-            crd = new Coordinate(xCord, yCord);
-            aircraftCarrier = new Ship('A', dir, crd);
+            try
+            {
+                char dir = scn.next().toLowerCase().charAt(0);
+                if (dir == 'u' || dir == 'd' || dir == 'r' || dir == 'l')
+                    return dir;
+                System.out.println("  Invalid direction! Please enter 'u', 'd', 'r' or 'l': ");
+            }
+            catch (Exception e)
+            {
+                System.out.println("  Invalid input. Please enter 'u', 'd', 'r' or 'l': ");
+                scn.nextLine(); // clear bad input
+            }
         }
-        bds.placeShips(crd, aircraftCarrier);
-        bds.printBoardA();
-
-        // --- Battleship (size 4) ---
-        System.out.println("The second ship is a battleship of size 4");
-        System.out.println("What direction would you like to place this ship? Enter 'u' for up, 'd' for down, 'r' for right or 'l' for left");
-        dir = scn.next().charAt(0);
-        System.out.println("Now enter the X-coordinate: ");
-        xCord = scn.nextInt();
-        System.out.println("Now enter the Y-coordinate: ");
-        yCord = scn.nextInt();
-
-        crd = new Coordinate(xCord, yCord);
-        Ship battleship = new Ship('B', dir, crd);
-        while (!bds.isValidLocation(crd, battleship))
-        {
-            System.out.println("That is an invalid location. Please enter again.");
-            System.out.println("Enter the X-coordinate: ");
-            xCord = scn.nextInt();
-            System.out.println("Enter the Y-coordinate: ");
-            yCord = scn.nextInt();
-            crd = new Coordinate(xCord, yCord);
-            battleship = new Ship('B', dir, crd);
-        }
-        bds.placeShips(crd, battleship);
-        bds.printBoardA();
-
-        // --- Submarine (size 3) ---
-        System.out.println("The third ship is a submarine of size 3");
-        System.out.println("What direction would you like to place this ship? Enter 'u' for up, 'd' for down, 'r' for right or 'l' for left");
-        dir = scn.next().charAt(0);
-        System.out.println("Now enter the X-coordinate: ");
-        xCord = scn.nextInt();
-        System.out.println("Now enter the Y-coordinate: ");
-        yCord = scn.nextInt();
-
-        crd = new Coordinate(xCord, yCord);
-        Ship submarine = new Ship('S', dir, crd);
-        while (!bds.isValidLocation(crd, submarine))
-        {
-            System.out.println("That is an invalid location. Please enter again.");
-            System.out.println("Enter the X-coordinate: ");
-            xCord = scn.nextInt();
-            System.out.println("Enter the Y-coordinate: ");
-            yCord = scn.nextInt();
-            crd = new Coordinate(xCord, yCord);
-            submarine = new Ship('S', dir, crd);
-        }
-        bds.placeShips(crd, submarine);
-        bds.printBoardA();
-
-        // --- Destroyer (size 3) ---
-        System.out.println("The fourth ship is a destroyer of size 3");
-        System.out.println("What direction would you like to place this ship? Enter 'u' for up, 'd' for down, 'r' for right or 'l' for left");
-        dir = scn.next().charAt(0);
-        System.out.println("Now enter the X-coordinate: ");
-        xCord = scn.nextInt();
-        System.out.println("Now enter the Y-coordinate: ");
-        yCord = scn.nextInt();
-
-        crd = new Coordinate(xCord, yCord);
-        Ship destroyer = new Ship('D', dir, crd);
-        while (!bds.isValidLocation(crd, destroyer))
-        {
-            System.out.println("That is an invalid location. Please enter again.");
-            System.out.println("Enter the X-coordinate: ");
-            xCord = scn.nextInt();
-            System.out.println("Enter the Y-coordinate: ");
-            yCord = scn.nextInt();
-            crd = new Coordinate(xCord, yCord);
-            destroyer = new Ship('D', dir, crd);
-        }
-        bds.placeShips(crd, destroyer);
-        bds.printBoardA();
-
-        // --- Patrol Boat (size 2) ---
-        System.out.println("The fifth and final ship is a patrol boat of size 2");
-        System.out.println("What direction would you like to place this ship? Enter 'u' for up, 'd' for down, 'r' for right or 'l' for left");
-        dir = scn.next().charAt(0);
-        System.out.println("Now enter the X-coordinate: ");
-        xCord = scn.nextInt();
-        System.out.println("Now enter the Y-coordinate: ");
-        yCord = scn.nextInt();
-
-        crd = new Coordinate(xCord, yCord);
-        Ship patrolBoat = new Ship('P', dir, crd);
-        while (!bds.isValidLocation(crd, patrolBoat))
-        {
-            System.out.println("That is an invalid location. Please enter again.");
-            System.out.println("Enter the X-coordinate: ");
-            xCord = scn.nextInt();
-            System.out.println("Enter the Y-coordinate: ");
-            yCord = scn.nextInt();
-            crd = new Coordinate(xCord, yCord);
-            patrolBoat = new Ship('P', dir, crd);
-        }
-        bds.placeShips(crd, patrolBoat);
-        bds.printBoardA();
-
-        System.out.println("You have finished setting up your board!");
     }
 
+    // ---------------------------------------------------------------
+    // Helper: read a valid integer coordinate (0-9)
+    // Re-prompts on non-integer or out-of-range input
+    // ---------------------------------------------------------------
+    private int readCoordinate(String axis)
+    {
+        while (true)
+        {
+            try
+            {
+                int val = scn.nextInt();
+                if (val >= 0 && val <= 9)
+                    return val;
+                System.out.println("  Out of range! " + axis + "-coordinate must be between 0 and 9. Try again: ");
+            }
+            catch (InputMismatchException e)
+            {
+                System.out.println("  Invalid input! Please enter a whole number between 0 and 9 for the " + axis + "-coordinate: ");
+                scn.nextLine(); // clear bad token
+            }
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // Helper: place one ship with full validation loop
+    // ---------------------------------------------------------------
+    private void placeOneShip(String name, char type)
+    {
+        System.out.println("\nPlacing your " + name + "...");
+        System.out.println("Enter direction ('u' up, 'd' down, 'r' right, 'l' left): ");
+        char dir = readDirection();
+
+        System.out.println("Enter X-coordinate (column 0-9): ");
+        int x = readCoordinate("X");
+        System.out.println("Enter Y-coordinate (row 0-9): ");
+        int y = readCoordinate("Y");
+
+        Coordinate crd = new Coordinate(x, y);
+        Ship ship = new Ship(type, dir, crd);
+
+        while (!bds.isValidLocation(crd, ship))
+        {
+            System.out.println("  That location is invalid (out of bounds or overlaps another ship).");
+            System.out.println("  Enter direction again: ");
+            dir = readDirection();
+            System.out.println("  Enter X-coordinate (0-9): ");
+            x = readCoordinate("X");
+            System.out.println("  Enter Y-coordinate (0-9): ");
+            y = readCoordinate("Y");
+            crd  = new Coordinate(x, y);
+            ship = new Ship(type, dir, crd);
+        }
+
+        bds.placeShips(crd, ship);
+        System.out.println("  " + name + " placed successfully!");
+        bds.printBoardA();
+    }
+
+    // ---------------------------------------------------------------
+    // Set up all 5 ships
+    // ---------------------------------------------------------------
+    public void PlayerSetUp()
+    {
+        System.out.println("\n==========================================");
+        System.out.println("  TIME TO PLACE YOUR SHIPS!");
+        System.out.println("==========================================\n");
+        System.out.println("Your board:");
+        bds.printBoardA();
+
+        placeOneShip("Aircraft Carrier (size 5)", 'A');
+        placeOneShip("Battleship (size 4)",       'B');
+        placeOneShip("Submarine (size 3)",         'S');
+        placeOneShip("Destroyer (size 3)",         'D');
+        placeOneShip("Patrol Boat (size 2)",       'P');
+
+        System.out.println("\n==========================================");
+        System.out.println("  ALL SHIPS PLACED! READY FOR BATTLE.");
+        System.out.println("==========================================\n");
+    }
+
+    // ---------------------------------------------------------------
+    // Player chooses where to attack
+    // Re-prompts if out of bounds OR already attacked
+    // ---------------------------------------------------------------
     public Coordinate playerGuessAttack()
     {
-        System.out.println("Enter the X-coordinate of where you want to attack the computer's board: ");
-        int attackX = scn.nextInt();
-        System.out.println("Enter the Y-coordinate of where you want to attack the computer's board: ");
-        int attackY = scn.nextInt();
-
-        Coordinate attack = new Coordinate(attackX, attackY);
-        while (!bds.isValidAttack(attack))
+        while (true)
         {
-            System.out.println("That is an invalid attack location. Please enter again.");
-            System.out.println("Enter the X-coordinate: ");
-            attackX = scn.nextInt();
-            System.out.println("Enter the Y-coordinate: ");
-            attackY = scn.nextInt();
-            attack = new Coordinate(attackX, attackY);
+            System.out.println("Enter X-coordinate to attack (column 0-9): ");
+            int attackX = readCoordinate("X");
+            System.out.println("Enter Y-coordinate to attack (row 0-9): ");
+            int attackY = readCoordinate("Y");
+
+            Coordinate attack = new Coordinate(attackX, attackY);
+
+            if (!bds.isValidAttack(attack))
+            {
+                System.out.println("  That coordinate is out of bounds. Try again.");
+                continue;
+            }
+
+            // Check if already attacked (H or M on boardB)
+            if (bds.isAlreadyAttackedB(attack))
+            {
+                System.out.println("  You've already attacked (" + attackX + ", " + attackY + ")! Choose a different location.");
+                continue;
+            }
+
+            return attack;
         }
-        return attack;
     }
 
     public void fireAndAttackComp(Computer comp, Coordinate attack)
     {
-        bds.printResult(bds.resultHitMissComp(attack, comp));
+        char result = bds.resultHitMissComp(attack, comp);
+        bds.printPlayerResult(result);
     }
 
     public void printBoard(char[][] board)
@@ -172,7 +162,6 @@ public class Player
 
     public boolean verifyPlayerWin(Computer c)
     {
-        // Player wins when every non-~ cell on computer's boardA has been hit (marked X)
         for (int i = 0; i < 10; i++)
             for (int j = 0; j < 10; j++)
                 if (c.getBoardA()[i][j] != '~' && c.getBoardA()[i][j] != 'X')

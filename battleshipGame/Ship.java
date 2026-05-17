@@ -15,10 +15,10 @@ public class Ship
         direction = dir;
         coord     = crd;
 
-        if      (let == 'A')              size = 5;
-        else if (let == 'B')              size = 4;
+        if      (let == 'A')               size = 5;
+        else if (let == 'B')               size = 4;
         else if (let == 'S' || let == 'D') size = 3;
-        else                              size = 2;
+        else                               size = 2;
     }
 
     public int getSize()         { return size; }
