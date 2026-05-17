@@ -56,7 +56,7 @@ battleshipGame/
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/mphokhoza/Battleship-Game.git
+git clone https://github.com/mompho/Battleship-Game.git
 cd Battleship-Game
 ```
 
