@@ -1,6 +1,6 @@
 # ⚓ Battleship Game — Java
 
-A fully featured, terminal-based Battleship game written in Java. Play a classic 1v1 game of naval strategy against a computer opponent that hunts your ships intelligently. Built entirely from scratch using core Java with no external libraries.
+A fully featured, terminal-based Battleship game written in Java. Play a classic 1v1 game of naval strategy against a computer opponent that hunts your ships intelligently. Built entirely from scratch using core Java with no external libraries. (Currently adding Java GUI)
 
 ---
 
